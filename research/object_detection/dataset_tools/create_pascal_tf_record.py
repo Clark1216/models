@@ -82,7 +82,7 @@ def dict_to_tf_example(data,
   Raises:
     ValueError: if the image pointed to by data['filename'] is not a valid JPEG
   """
-  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
+  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'] + '.jpg')
   full_path = os.path.join(dataset_directory, img_path)
   with tf.gfile.GFile(full_path, 'rb') as fid:
     encoded_jpg = fid.read()
@@ -161,19 +161,21 @@ def main(_):
 
   for year in years:
     logging.info('Reading from PASCAL %s dataset.', year)
-    examples_path = os.path.join(data_dir, year, 'ImageSets', 'Main',
-                                 'aeroplane_' + FLAGS.set + '.txt')
+    examples_path = os.path.join(data_dir, year, 'ImageSets', 'Main/' + FLAGS.set + '.txt')
     annotations_dir = os.path.join(data_dir, year, FLAGS.annotations_dir)
     examples_list = dataset_util.read_examples_list(examples_path)
     for idx, example in enumerate(examples_list):
       if idx % 100 == 0:
         logging.info('On image %d of %d', idx, len(examples_list))
-      path = os.path.join(annotations_dir, example + '.xml')
+      example_tmp1 = example.split('.')
+      example_tmp2 = example_tmp1[0]
+      path = os.path.join(annotations_dir, example_tmp2 + '.xml')
       with tf.gfile.GFile(path, 'r') as fid:
         xml_str = fid.read()
       xml = etree.fromstring(xml_str)
       data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
-
+      data['folder'] = os.path.join(data_dir, year)
+      print("<><><><><><><><",data)
       tf_example = dict_to_tf_example(data, FLAGS.data_dir, label_map_dict,
                                       FLAGS.ignore_difficult_instances)
       writer.write(tf_example.SerializeToString())
