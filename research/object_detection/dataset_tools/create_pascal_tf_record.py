@@ -169,7 +169,8 @@ def main(_):
         logging.info('On image %d of %d', idx, len(examples_list))
       example_tmp1 = example.split('.')
       example_tmp2 = example_tmp1[0]
-      path = os.path.join(annotations_dir, example_tmp2 + '.xml')
+      # path = os.path.join(annotations_dir, 'example_tmp2' + '.xml')
+      path = os.path.join(annotations_dir, 'annotations' + '.xml')
       with tf.gfile.GFile(path, 'r') as fid:
         xml_str = fid.read()
       xml = etree.fromstring(xml_str)
