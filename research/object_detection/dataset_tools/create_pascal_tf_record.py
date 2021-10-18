@@ -87,8 +87,8 @@ def dict_to_tf_example(data,
   Depending on whether filename in XML has suffix of file,
   toggle matched img_path definition in the 2 lines below:
   """
-  # img_path = os.path.join(data['folder'], image_subdirectory, data['filename'] + '.jpg')
-  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
+  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'] + '.jpg')
+  # img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
 
   full_path = os.path.join(dataset_directory, img_path)
   with tf.gfile.GFile(full_path, 'rb') as fid:
@@ -180,13 +180,14 @@ def main(_):
         logging.info('On image %d of %d', idx, len(examples_list))
       example_tmp1 = example.split('.')
       example_tmp2 = example_tmp1[0]
-      path = os.path.join(annotations_dir, 'example_tmp2' + '.xml')
+      path = os.path.join(annotations_dir, example_tmp2 + '.xml')
+      # print("<><><><><><><><>>>",path)
       with tf.gfile.GFile(path, 'r') as fid:
         xml_str = fid.read()
       xml = etree.fromstring(xml_str)
       data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
       data['folder'] = os.path.join(data_dir, year)
-      print("<><><><><><><><",data)
+      # print("<><><><><><><><",data)
       tf_example = dict_to_tf_example(data, FLAGS.data_dir, label_map_dict,
                                       FLAGS.ignore_difficult_instances)
       writer.write(tf_example.SerializeToString())
