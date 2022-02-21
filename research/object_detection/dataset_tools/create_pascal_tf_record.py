@@ -87,8 +87,8 @@ def dict_to_tf_example(data,
   Depending on whether filename in XML has suffix of file,
   toggle matched img_path definition in the 2 lines below:
   """
-  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'] + '.jpg')
-  # img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
+  # img_path = os.path.join(data['folder'], image_subdirectory, data['filename'] + '.jpg')
+  img_path = os.path.join(data['folder'], image_subdirectory, data['filename'])
 
   full_path = os.path.join(dataset_directory, img_path)
   with tf.gfile.GFile(full_path, 'rb') as fid:
